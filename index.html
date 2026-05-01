@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal do Cliente | MKS Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        :root {
+            --mks-purple: #4c1d95;
+            --mks-light: #a78bfa;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        /* TÍTULO COM BRILHO MKS */
+        .mks-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, var(--mks-purple) 20%, var(--mks-light) 40%, var(--mks-light) 60%, var(--mks-purple) 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.2));
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* MODAL / CARDS ESTILO GLASS */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* BOTÃO PREMIUM */
+        .mks-btn {
+            background: linear-gradient(135deg, var(--mks-purple), #7c3aed);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mks-btn:active { transform: scale(0.96); }
+
+        /* ANIMAÇÃO DE ENTRADA */
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* INPUT DE SENHA PROFISSIONAL AJUSTADO */
+        .password-input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #334155;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .password-input:focus {
+            border-color: var(--mks-light);
+            box-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
+            outline: none;
+        }
+
+        /* Aplica o espaçamento apenas quando há conteúdo (senha digitada) */
+        .password-input:not(:placeholder-shown) {
+            letter-spacing: 0.6em;
+            font-size: 1.5rem;
+        }
+
+        .password-input::placeholder {
+            letter-spacing: normal;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        footer { 
+            margin-top: 60px; 
+            text-align: center; 
+            padding-bottom: 30px; 
+            color: #64748b; 
+            font-size: 0.75rem; 
+            font-weight: 500;
+        }
+
+        .status-badge {
+            font-size: 9px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <div id="app" class="flex-grow max-w-md mx-auto px-6 py-12 w-full">
+        
+        <!-- HEADER -->
+        <header class="text-center mb-12 fade-in-up">
+            <h1 class="mks-title">MKS TECH</h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.3em] font-black">Portal de Transparência</p>
+        </header>
+
+        <!-- CONTAINER PRINCIPAL PARA MODAIS -->
+        <main id="main-content">
+            
+            <!-- ETAPA 1: TELEFONE -->
+            <section id="step-tel" class="glass-card p-8 fade-in-up">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-violet-600/20 rounded-full mb-4">
+                        <i class="fas fa-mobile-screen-button text-2xl text-violet-400"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Acesse sua Conta</h2>
+                    <p class="text-slate-400 text-sm">Digite seu WhatsApp para continuar</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <input type="tel" id="input-tel" placeholder="(00) 00000-0000" 
+                        class="w-full bg-slate-900/60 border border-slate-700 rounded-2xl py-4 px-6 text-lg outline-none focus:border-violet-500 transition-all text-center">
+                    
+                    <button onclick="verificarTelefone()" class="mks-btn w-full text-white py-4 rounded-2xl shadow-lg shadow-violet-900/20">
+                        Verificar Acesso
+                    </button>
+                </div>
+            </section>
+
+            <!-- ETAPA 2: LOGIN (SENHA) -->
+            <section id="step-login" class="hidden glass-card p-8 fade-in-up">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-violet-600/20 rounded-full mb-4">
+                        <i class="fas fa-lock text-2xl text-violet-400"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Segurança</h2>
+                    <p class="text-slate-400 text-sm">Informe sua senha de acesso</p>
+                </div>
+                
+                <input type="password" id="input-senha" placeholder="Sua senha" 
+                    class="password-input w-full rounded-2xl py-5 px-4 mb-6">
+                
+                <button onclick="fazerLogin()" class="mks-btn w-full text-white py-4 rounded-2xl">
+                    Confirmar e Entrar
+                </button>
+                <button onclick="location.reload()" class="w-full mt-6 text-slate-500 text-[10px] font-black uppercase tracking-widest hover:text-slate-300">
+                    <i class="fas fa-arrow-left mr-1"></i> Voltar
+                </button>
+            </section>
+
+            <!-- ETAPA 3: CADASTRO -->
+            <section id="step-cadastro" class="hidden glass-card p-8 fade-in-up">
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-violet-400">Bem-vindo!</h2>
+                    <p class="text-slate-400 text-sm">Este é seu primeiro acesso. <br>Crie uma senha de segurança:</p>
+                </div>
+                
+                <input type="password" id="nova-senha" placeholder="Crie uma nova senha" 
+                    class="password-input w-full rounded-2xl py-5 px-4 mb-6">
+                
+                <button onclick="cadastrarSenha()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl uppercase tracking-wider transition-all">
+                    Finalizar Cadastro
+                </button>
+            </section>
+
+            <!-- ETAPA 4: DASHBOARD -->
+            <section id="step-dashboard" class="hidden space-y-6 fade-in-up">
+                <div class="flex justify-between items-end px-2">
+                    <div>
+                        <p class="text-[10px] text-violet-400 font-black uppercase tracking-tighter">Olá, seja bem-vindo</p>
+                        <h2 id="cliente-nome" class="text-2xl font-black uppercase tracking-tight">Cliente</h2>
+                    </div>
+                    <button onclick="location.reload()" class="bg-slate-800/50 p-3 rounded-2xl text-slate-400 border border-slate-700 hover:bg-red-500/10 hover:text-red-400 transition-all">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+                
+                <div id="cards-container" class="space-y-6"></div>
+            </section>
+
+            <!-- LOADING -->
+            <div id="loading" class="hidden text-center py-20">
+                <div class="relative inline-block">
+                    <div class="w-16 h-16 border-4 border-violet-900 rounded-full"></div>
+                    <div class="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+                </div>
+                <p class="text-slate-500 mt-6 text-[10px] font-black uppercase tracking-[0.3em]">Autenticando...</p>
+            </div>
+
+        </main>
+
+        <footer>
+            <p>© 2026 MKS Tech Solutions. <br>Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyVID-Xjf3zqvw6Ro_HllhjzHXAcKk6Ki1uIMwDRqLg06v2mhQ30pnDbSB0TPS4Pv-D/exec'; 
+        let userTel = "";
+
+        function showStep(id) {
+            ['step-tel', 'step-login', 'step-cadastro', 'step-dashboard', 'loading'].forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            const el = document.getElementById(id);
+            el.classList.remove('hidden');
+        }
+
+        async function verificarTelefone() {
+            userTel = document.getElementById('input-tel').value.replace(/\D/g, "");
+            if(userTel.length < 8) return alert("Por favor, digite um número válido.");
+            showStep('loading');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ origin: 'PORTAL_CLIENTE', action: 'login', telefone: userTel, senhaCliente: 'check_only' })
+                });
+                const res = await response.json();
+                if (res.needsRegistration) showStep('step-cadastro');
+                else showStep('step-login');
+            } catch (e) { alert("Erro de conexão"); showStep('step-tel'); }
+        }
+
+        async function cadastrarSenha() {
+            const senha = document.getElementById('nova-senha').value;
+            if(senha.length < 4) return alert("A senha deve ter no mínimo 4 dígitos.");
+            showStep('loading');
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ origin: 'PORTAL_CLIENTE', action: 'cadastrar', telefone: userTel, novaSenha: senha })
+            });
+            const res = await response.json();
+            if(res.success) { alert("Senha criada com sucesso!"); showStep('step-login'); }
+        }
+
+        async function fazerLogin() {
+            const senha = document.getElementById('input-senha').value;
+            showStep('loading');
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ origin: 'PORTAL_CLIENTE', action: 'login', telefone: userTel, senhaCliente: senha })
+                });
+                const res = await response.json();
+                if(res.success) renderDashboard(res);
+                else { alert("Senha incorreta!"); showStep('step-login'); }
+            } catch (e) { showStep('step-login'); }
+        }
+
+        function renderDashboard(res) {
+            document.getElementById('cliente-nome').innerText = res.cliente;
+            const container = document.getElementById('cards-container');
+            container.innerHTML = "";
+
+            if(res.dados.length === 0) {
+                container.innerHTML = `<div class="glass-card p-10 text-center text-slate-500 font-medium">Nenhum registro encontrado para este número.</div>`;
+            }
+
+            res.dados.forEach(item => {
+                // --- LÓGICA DE CÁLCULO DE PARCELAS RESTANTES ---
+                const limparMoeda = (valor) => {
+                    if (!valor) return 0;
+                    return parseFloat(valor.toString().replace(/[R$\.\s]/g, "").replace(",", ".")) || 0;
+                };
+                
+                const saldoDevedorNum = limparMoeda(item.restante);
+                const valorParcelaNum = limparMoeda(item.valorParc);
+                
+                // Calcula quantas vezes faltam dividindo saldo devedor por valor da parcela
+                let parcelasFaltantes = valorParcelaNum > 0 ? Math.ceil(saldoDevedorNum / valorParcelaNum) : 0;
+                
+                const isPago = saldoDevedorNum <= 0;
+                const textoRestante = isPago ? "CONCLUÍDO" : `Faltam ${parcelasFaltantes}x`;
+                // ------------------------------------------------
+
+                const card = `
+                    <div class="glass-card overflow-hidden">
+                        <div class="p-5 bg-white/5 border-b border-white/5 flex justify-between items-center">
+                            <div>
+                                <p class="text-[9px] uppercase font-black text-violet-400 tracking-widest mb-1">${item.transacao}</p>
+                                <h3 class="font-bold text-slate-100 uppercase text-sm leading-none">${item.item}</h3>
+                            </div>
+                            <span class="status-badge ${isPago ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
+                                ${item.status || (isPago ? 'PAGO' : 'ABERTO')}
+                            </span>
+                        </div>
+                        
+                        <div class="p-6 grid grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-tighter">Total do Item</p>
+                                <p class="text-sm font-black font-mono">${item.valorTotal}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-tighter">Saldo devedor</p>
+                                <p class="text-sm font-black font-mono ${isPago ? 'text-emerald-500' : 'text-rose-500'}">${item.restante}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-tighter">Plano</p>
+                                <p class="text-xs font-bold text-slate-300 tracking-tight">${item.parcelas} de ${item.valorParc}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[9px] uppercase font-bold text-violet-400 tracking-tighter">Situação</p>
+                                <p class="text-xs font-black text-violet-300">${textoRestante}</p>
+                            </div>
+                        </div>
+
+                        <div class="px-6 py-3 bg-black/10 border-t border-white/5 flex justify-between items-center">
+                            <p class="text-[9px] font-bold text-slate-500 uppercase tracking-tight">Próximo Vencimento:</p>
+                            <p class="text-[10px] font-black text-violet-400">${item.proximoPagto}</p>
+                        </div>
+
+                        <div class="px-6 py-4 bg-black/20 text-[10px]">
+                            <p class="text-slate-500 uppercase font-black mb-3 flex items-center">
+                                <span class="w-1.5 h-1.5 bg-violet-500 rounded-full mr-2 animate-pulse"></span>
+                                Histórico de Atividade
+                            </p>
+                            <div class="text-slate-400 font-medium leading-relaxed max-h-24 overflow-y-auto custom-scrollbar italic">
+                                ${item.historicoLogs ? item.historicoLogs.split('|').join('<div class="h-1 text-slate-800">---</div>') : 'Aguardando primeira movimentação.'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+            showStep('step-dashboard');
+        }
+    </script>
+</body>
+</html>

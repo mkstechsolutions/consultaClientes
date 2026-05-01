@@ -276,6 +276,21 @@
                 container.innerHTML = `<div class="glass-card p-10 text-center text-slate-500 font-medium">Nenhum registro encontrado para este número.</div>`;
             }
 
+            // --- LÓGICA DE ORDENAÇÃO: PENDENTES PRIMEIRO ---
+            const limparValor = (v) => parseFloat(v.toString().replace(/[R$\.\s]/g, "").replace(",", ".")) || 0;
+            
+            res.dados.sort((a, b) => {
+                const saldoA = limparValor(a.restante);
+                const saldoB = limparValor(b.restante);
+                
+                // Se saldo > 0, status 0 (sobe). Se saldo <= 0, status 1 (desce).
+                const statusA = saldoA > 0 ? 0 : 1;
+                const statusB = saldoB > 0 ? 0 : 1;
+                
+                return statusA - statusB;
+            });
+            // ----------------------------------------------
+
             res.dados.forEach(item => {
                 // --- LÓGICA DE CÁLCULO DE PARCELAS RESTANTES ---
                 const limparMoeda = (valor) => {
